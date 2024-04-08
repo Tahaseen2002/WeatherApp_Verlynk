@@ -1,16 +1,29 @@
-import { useState } from 'react';
-import './App.css';
+import React, { useState } from 'react';
 import FormComponent from './Components/FormComponent';
-import ErrorComponent from './Components/ErrorComponent'
+import WeatherCard from './Components/WeatherCard';
 
-function App() {
-  const [error,setError]=useState('');
-  return (
-    <div className="App">
-      <FormComponent  />
-      {error && <ErrorComponent message={error}/>}
-    </div>
-  );
-}
+const App = () => {
+    const [citiesWeatherData, setCitiesWeatherData] = useState([]);
+    
+    const handleWeatherData = (data) => {
+        setCitiesWeatherData([...citiesWeatherData, data]);
+    };
+    const handleDelete = (cityName) => {
+      const updatedWeatherData = citiesWeatherData.filter(city => city.name !== cityName);
+      setCitiesWeatherData(updatedWeatherData);
+  };
+
+    return (
+        <div>
+            <h1>Weather Dashboard</h1>
+            <FormComponent onWeatherData={handleWeatherData} />
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {citiesWeatherData.map((cityWeatherData, index) => (
+                    <WeatherCard key={index} weatherData={cityWeatherData} onDelete={handleDelete} />
+                ))}
+            </div>
+        </div>
+    );
+};
 
 export default App;
